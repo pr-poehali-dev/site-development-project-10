@@ -6,10 +6,21 @@ import Icon from '@/components/ui/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const { toast } = useToast();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    message: ''
+  });
 
   const services = [
     {
@@ -86,6 +97,23 @@ const Index = () => {
     }
   };
 
+  const handleSubmitForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    toast({
+      title: 'Заявка отправлена!',
+      description: 'Мы свяжемся с вами в ближайшее время.',
+    });
+    
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      message: ''
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-40">
@@ -96,6 +124,7 @@ const Index = () => {
             <a href="#services" className="text-foreground hover:text-accent transition-colors">Услуги</a>
             <a href="#prices" className="text-foreground hover:text-accent transition-colors">Цены</a>
             <a href="#reviews" className="text-foreground hover:text-accent transition-colors">Отзывы</a>
+            <a href="#contact" className="text-foreground hover:text-accent transition-colors">Контакты</a>
           </nav>
           <Button>Связаться</Button>
         </div>
@@ -214,6 +243,82 @@ const Index = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Оставить заявку</h2>
+            <p className="text-center text-muted-foreground mb-12">
+              Заполните форму, и мы свяжемся с вами для обсуждения вашего проекта
+            </p>
+            <Card className="shadow-xl">
+              <CardContent className="pt-6">
+                <form onSubmit={handleSubmitForm} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Имя *</Label>
+                      <Input 
+                        id="name" 
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        placeholder="Иван Иванов" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email *</Label>
+                      <Input 
+                        id="email" 
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        placeholder="example@company.ru" 
+                      />
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Телефон *</Label>
+                      <Input 
+                        id="phone" 
+                        type="tel"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        placeholder="+7 (999) 123-45-67" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="company">Компания</Label>
+                      <Input 
+                        id="company" 
+                        value={formData.company}
+                        onChange={(e) => setFormData({...formData, company: e.target.value})}
+                        placeholder="Название компании" 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Сообщение</Label>
+                    <Textarea 
+                      id="message" 
+                      value={formData.message}
+                      onChange={(e) => setFormData({...formData, message: e.target.value})}
+                      placeholder="Расскажите о вашем проекте или задаче..."
+                      rows={5}
+                    />
+                  </div>
+                  <Button type="submit" size="lg" className="w-full">
+                    <Icon name="Send" className="w-4 h-4 mr-2" />
+                    Отправить заявку
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
